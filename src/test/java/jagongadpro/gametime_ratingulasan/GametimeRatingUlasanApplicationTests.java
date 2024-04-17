@@ -8,7 +8,6 @@ class GametimeRatingUlasanApplicationTests {
 
     @Test
     void contextLoads() {
-
     }
 
 }

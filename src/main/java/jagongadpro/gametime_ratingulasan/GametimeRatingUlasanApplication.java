@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 public class GametimeRatingUlasanApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GametimeRatingUlasanApplication.class, args);
-    }
+    public static void main(String[] args) { SpringApplication.run(GametimeRatingUlasanApplication.class, args);}
 
 }
