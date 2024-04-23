@@ -10,5 +10,11 @@ import lombok.*;
 @Getter
 @Setter
 public class Game {
-
+    @Id
+    String id;
+    String nama;
+    String deskripsi;
+    Integer harga;
+    String kategori;
+    Integer stok;
 }
