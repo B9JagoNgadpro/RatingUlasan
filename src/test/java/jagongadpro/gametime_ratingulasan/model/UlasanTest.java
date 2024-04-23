@@ -34,7 +34,7 @@ public class UlasanTest {
     }
 
     @Test
-    public void testSetterGetter() {
+    public void testGetter() {
         assertEquals("ulasan1", ulasan.getId());
         assertEquals("user123", ulasan.getIdUser());
         assertEquals(4, ulasan.getRating().intValue());
@@ -55,13 +55,20 @@ public class UlasanTest {
     }
 
     @Test
-    public void testValidation() {
+    public void testValidationRating() {
         // Memastikan rating berada dalam rentang 1-5
-        ulasan.setRating(6);
-        assertNotEquals(5, ulasan.getRating().intValue());
+        ulasan.setRating(10);
+        assertNotEquals(10, ulasan.getRating().intValue());
 
+        ulasan.setRating(-1);
+        assertNotEquals(-1, ulasan.getRating().intValue());
+    }
+
+    @Test
+    public void testValidationDescription() {
         // Memastikan deskripsi tidak boleh kosong
-        ulasan.setDeskripsi("");
-        assertNotNull(ulasan.getDeskripsi());
+        assertThrows(IllegalArgumentException.class, () -> {
+            ulasan.setDeskripsi(null);
+        });
     }
 }
