@@ -10,4 +10,11 @@ import lombok.*;
 public class NotifPenjual {
     String idPenjual;
     ArrayList<String> notifs;
+
+    public void newNotif(String notif) {
+        if (notifs == null) {
+            notifs = new ArrayList<>();
+        }
+        notifs.add(notif);
+    }
 }
