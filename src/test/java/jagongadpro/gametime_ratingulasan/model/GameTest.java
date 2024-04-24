@@ -16,7 +16,11 @@ class GameTest {
         game.setNama("Game1");
         assertEquals("Game1", game.getNama());
     }
-
+    @Test
+    void testGetterSetterUser(){
+        game.setIdPenjual("penjual1");
+        assertEquals("penjual1", game.getIdPenjual());
+    }
     @Test
     void testGetterSetterId(){
         game.setId("abc");
