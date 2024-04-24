@@ -1,5 +1,6 @@
 package jagongadpro.gametime_ratingulasan.service;
 
+import jagongadpro.gametime_ratingulasan.model.Game;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.util.List;
 public class UlasanServiceImpl implements UlasanService {
 
     private final UlasanRepository ulasanRepository;
+    private Subject game;
 
     @Autowired
     public UlasanServiceImpl(UlasanRepository ulasanRepository) {
@@ -19,6 +21,12 @@ public class UlasanServiceImpl implements UlasanService {
 
     @Override
     public Ulasan createUlasan(Ulasan ulasan) {
+        Game gameYangDiulas = ulasan.getGame();
+        game.notifyObservers(gameYangDiulas.getIdPenjual(),
+                String.format(
+                        "%s telah mengulas produk %s kamu!",
+                        ulasan.getIdUser(),
+                        gameYangDiulas.getNama()));
         return ulasanRepository.create(ulasan);
     }
 
