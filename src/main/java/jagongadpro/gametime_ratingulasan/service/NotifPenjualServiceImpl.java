@@ -33,6 +33,7 @@ public class NotifPenjualServiceImpl implements NotifPenjualService, Observer {
     @Override
     public void update(String notif, String id) {
         NotifPenjual penjualDituju = notifPenjualRepository.findById(id);
+        System.out.println(penjualDituju.getIdPenjual());
         penjualDituju.newNotif(notif);
     }
 }
