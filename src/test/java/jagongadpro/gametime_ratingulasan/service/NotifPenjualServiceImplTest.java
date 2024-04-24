@@ -21,28 +21,28 @@ class NotifPenjualServiceImplTest {
     @InjectMocks
     private NotifPenjualServiceImpl notifPenjualService;
 
-    private NotifPenjual notifPenjual;
+    private NotifPenjual notifPenjualBaru;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        notifPenjual = new NotifPenjual("penjual1", new ArrayList<>());
+        notifPenjualBaru = new NotifPenjual("penjual1", new ArrayList<>());
     }
 
     @Test
     void testSaveNotifPenjual() {
-        when(notifPenjualRepository.save(notifPenjual)).thenReturn(notifPenjual);
-        NotifPenjual savedNotif = notifPenjualService.saveNotifPenjual(notifPenjual);
+        when(notifPenjualRepository.save(notifPenjualBaru)).thenReturn(notifPenjualBaru);
+        NotifPenjual savedNotif = notifPenjualService.saveNotifPenjual(notifPenjualBaru);
         assertNotNull(savedNotif);
-        assertEquals(notifPenjual, savedNotif);
+        assertEquals("penjual1", savedNotif.getIdPenjual());
     }
 
     @Test
     void testFindNotifPenjualById() {
-        when(notifPenjualRepository.findById("penjual1")).thenReturn(notifPenjual);
+        when(notifPenjualRepository.findById("penjual1")).thenReturn(notifPenjualBaru);
         NotifPenjual foundNotif = notifPenjualService.findNotifPenjualById("penjual1");
         assertNotNull(foundNotif);
-        assertEquals(notifPenjual, foundNotif);
+        assertEquals(notifPenjualBaru, foundNotif);
     }
 
     @Test
@@ -56,5 +56,18 @@ class NotifPenjualServiceImplTest {
     void testCheckIfNotifPenjualExists() {
         when(notifPenjualRepository.existsById("penjual1")).thenReturn(true);
         assertTrue(notifPenjualService.checkIfNotifPenjualExists("penjual1"));
+    }
+
+    @Test
+    void testObserverNotifications() {
+        when(notifPenjualRepository.save(notifPenjualBaru)).thenReturn(notifPenjualBaru);
+        NotifPenjual savedNotif = notifPenjualService.saveNotifPenjual(notifPenjualBaru);
+
+        when(notifPenjualRepository.findById(savedNotif.getIdPenjual())).thenReturn(savedNotif);
+        notifPenjualService.update("User456 telah mengulas produk game123 kamu!", savedNotif.getIdPenjual());
+
+        when(notifPenjualRepository.findById(savedNotif.getIdPenjual())).thenReturn(savedNotif);
+        NotifPenjual cariUlangPenjual = notifPenjualRepository.findById(savedNotif.getIdPenjual());
+        assertFalse(cariUlangPenjual.getNotifs().isEmpty());
     }
 }
