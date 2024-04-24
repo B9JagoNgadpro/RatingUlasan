@@ -12,6 +12,7 @@ import lombok.*;
 public class Game {
     @Id
     String id;
+    String idPenjual;
     String nama;
     String deskripsi;
     Integer harga;
