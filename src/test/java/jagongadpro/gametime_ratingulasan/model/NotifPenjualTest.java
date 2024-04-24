@@ -50,4 +50,10 @@ public class NotifPenjualTest {
         notifPenjual.setNotifs(notifikasi);
         assertArrayEquals(notifikasi.toArray(), notifPenjual.getNotifs().toArray());
     }
+
+    @Test
+    public void testNewNotifs(){
+        notifPenjual.newNotif("User1 telah mengulas produk game1 kamu!");
+        assertFalse(notifPenjual.getNotifs().isEmpty());
+    }
 }
