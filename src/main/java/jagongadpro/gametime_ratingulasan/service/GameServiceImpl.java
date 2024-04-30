@@ -12,6 +12,7 @@ import java.util.List;
 public class GameServiceImpl implements GameService, Subject {
     @Autowired
     private GameRepository gameRepository;
+
     @Autowired
     private Observer notifPenjualObserver;
 

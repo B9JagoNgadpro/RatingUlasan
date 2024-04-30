@@ -1,7 +1,10 @@
 package jagongadpro.gametime_ratingulasan.model;
 
 import java.util.ArrayList;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor

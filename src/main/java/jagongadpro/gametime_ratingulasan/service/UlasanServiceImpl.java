@@ -10,14 +10,11 @@ import java.util.List;
 
 @Service
 public class UlasanServiceImpl implements UlasanService {
-
-    private final UlasanRepository ulasanRepository;
-    private Subject game;
+    @Autowired
+    private UlasanRepository ulasanRepository;
 
     @Autowired
-    public UlasanServiceImpl(UlasanRepository ulasanRepository) {
-        this.ulasanRepository = ulasanRepository;
-    }
+    private Subject game;
 
     @Override
     public Ulasan createUlasan(Ulasan ulasan) {
