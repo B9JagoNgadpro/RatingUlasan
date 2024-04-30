@@ -4,29 +4,40 @@ import jagongadpro.gametime_ratingulasan.model.TanggapanUlasan;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class TanggapanUlasanRepositoryTest {
 
+    @InjectMocks
     private TanggapanUlasanRepository repository;
     private TanggapanUlasan tanggapanUlasan;
     private Ulasan ulasan;
 
     @BeforeEach
     void setUp() {
-        repository = new TanggapanUlasanRepository();
-        tanggapanUlasan = new TanggapanUlasan();
-        ulasan = new Ulasan();
-        ulasan.setId("ulasan123");
+        ulasan = new Ulasan.Builder()
+                .id("ulasan123")
+                .idUser("user123")
+                .game("game1")
+                .rating(3)
+                .deskripsi("Great game!")
+                .date(LocalDate.now())
+                .build();
 
-        tanggapanUlasan.setPenjualId("penjual123");
-        tanggapanUlasan.setUlasan(ulasan);
-        tanggapanUlasan.setTanggapan("Terima kasih atas ulasannya!");
-        tanggapanUlasan.setDate(LocalDate.now());
+        tanggapanUlasan = new TanggapanUlasan.Builder()
+                .penjualId("penjual123")
+                .ulasan(ulasan)
+                .tanggapan("Terima kasih atas ulasannya!")
+                .date(LocalDate.now())
+                .build();
     }
 
     @Test
@@ -95,7 +106,7 @@ class TanggapanUlasanRepositoryTest {
 
     @Test
     void testUpdateNonExistent() {
-        TanggapanUlasan nonExistentTanggapanUlasan = new TanggapanUlasan();
+        TanggapanUlasan nonExistentTanggapanUlasan = new TanggapanUlasan.Builder().build();
         nonExistentTanggapanUlasan.setId("nonExistentId");
         assertNull(repository.update(nonExistentTanggapanUlasan), "Updating non-existent tanggapanUlasan should return null");
     }

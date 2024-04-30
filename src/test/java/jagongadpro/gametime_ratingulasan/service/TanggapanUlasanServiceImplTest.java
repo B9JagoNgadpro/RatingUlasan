@@ -28,9 +28,15 @@ class TanggapanUlasanServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        Ulasan ulasanBaru = new Ulasan();
+        Ulasan ulasanBaru = new Ulasan.Builder().build();
         ulasanBaru.setIdUser("user1");
-        tanggapanUlasan = new TanggapanUlasan("1", "penjual1", ulasanBaru, "Makasih udah membeli!", LocalDate.now());
+
+        tanggapanUlasan = new TanggapanUlasan.Builder()
+                .id("1").penjualId("penjual1")
+                .ulasan(ulasanBaru)
+                .tanggapan("Makasih udah membeli!")
+                .date(LocalDate.now())
+                .build();
     }
 
     @Test

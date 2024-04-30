@@ -12,7 +12,6 @@ public class UlasanServiceImpl implements UlasanService {
     @Autowired
     private UlasanRepository ulasanRepository;
 
-
     @Override
     public Ulasan createUlasan(Ulasan ulasan) {
         return ulasanRepository.create(ulasan);

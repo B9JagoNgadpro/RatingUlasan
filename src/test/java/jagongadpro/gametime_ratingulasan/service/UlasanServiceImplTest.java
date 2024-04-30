@@ -27,7 +27,14 @@ class UlasanServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        ulasan = new Ulasan("ulasan1", "user1", "game1", 5, "Excellent!", LocalDate.now());
+        ulasan = new Ulasan.Builder()
+                .id("ulasan1")
+                .idUser("user1")
+                .game("game1")
+                .rating(5)
+                .deskripsi("Excellent!")
+                .date(LocalDate.now())
+                .build();
     }
 
     @Test

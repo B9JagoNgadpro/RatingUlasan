@@ -10,12 +10,8 @@ import java.util.List;
 @Service
 public class TanggapanUlasanServiceImpl implements TanggapanUlasanService {
 
-    private final TanggapanUlasanRepository tanggapanUlasanRepository;
-
     @Autowired
-    public TanggapanUlasanServiceImpl(TanggapanUlasanRepository tanggapanUlasanRepository) {
-        this.tanggapanUlasanRepository = tanggapanUlasanRepository;
-    }
+    private TanggapanUlasanRepository tanggapanUlasanRepository;
 
     @Override
     public TanggapanUlasan createTanggapanUlasan(TanggapanUlasan tanggapanUlasan) {
