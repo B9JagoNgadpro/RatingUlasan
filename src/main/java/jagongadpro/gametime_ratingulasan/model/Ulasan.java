@@ -1,43 +1,81 @@
 package jagongadpro.gametime_ratingulasan.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import java.time.LocalDate;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 public class Ulasan {
-    String id;
-    String idUser;
-    String game;
-    Integer rating;
-    String deskripsi;
-    LocalDate date;
+    private String id;
+    private String idUser;
+    private String game;
+    private Integer rating;
+    private String deskripsi;
+    private LocalDate date;
 
-    public void setDeskripsi(String deskripsi) {
-        if (deskripsi != null && !deskripsi.isEmpty()) {
-            this.deskripsi = deskripsi;
-        } else {
-            throw new IllegalArgumentException("Deskripsi tidak boleh kosong");
-        }
+    private Ulasan(Builder builder) {
+        this.id = builder.id;
+        this.idUser = builder.idUser;
+        this.game = builder.game;
+        this.rating = builder.rating;
+        this.deskripsi = builder.deskripsi;
+        this.date = builder.date;
     }
 
-    public void setRating(Integer rating) {
-        if (rating != null) {
-            // Memastikan rating berada dalam rentang 1-5
-            if (rating < 1) {
-                this.rating = 1;
-            } else if (rating > 5) {
-                this.rating = 5;
-            } else {
-                this.rating = rating;
+    public static class Builder {
+        private String id;
+        private String idUser;
+        private String game;
+        private Integer rating;
+        private String deskripsi;
+        private LocalDate date;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder idUser(String idUser) {
+            this.idUser = idUser;
+            return this;
+        }
+
+        public Builder game(String game) {
+            this.game = game;
+            return this;
+        }
+
+        public Builder rating(Integer rating) {
+            if (rating != null) {
+                // Memastikan rating berada dalam rentang 1-5
+                if (rating < 1) {
+                    this.rating = 1;
+                } else if (rating > 5) {
+                    this.rating = 5;
+                } else {
+                    this.rating = rating;
+                }
             }
+            return this;
+        }
+
+        public Builder deskripsi(String deskripsi) {
+            if (deskripsi != null && !deskripsi.isEmpty()) {
+                this.deskripsi = deskripsi;
+            } else {
+                throw new IllegalArgumentException("Deskripsi tidak boleh kosong");
+            }
+            return this;
+        }
+
+        public Builder date(LocalDate date) {
+            this.date = date;
+            return this;
+        }
+
+        public Ulasan build() {
+            return new Ulasan(this);
         }
     }
 }
-
