@@ -9,11 +9,10 @@ public class TanggapanUlasanTest {
 
     @BeforeEach
     void setUp() {
-        Game game = new Game();
         Ulasan ulasan = new Ulasan();
         ulasan.setId("ulasan1");
         ulasan.setIdUser("user123");
-        ulasan.setGame(game);
+        ulasan.setGame("game1");
         ulasan.setRating(4);
         ulasan.setDeskripsi("Game seru untuk action.");
         ulasan.setDate(LocalDate.now());

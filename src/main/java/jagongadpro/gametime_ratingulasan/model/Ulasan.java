@@ -14,7 +14,7 @@ import lombok.Setter;
 public class Ulasan {
     String id;
     String idUser;
-    Game game;
+    String game;
     Integer rating;
     String deskripsi;
     LocalDate date;

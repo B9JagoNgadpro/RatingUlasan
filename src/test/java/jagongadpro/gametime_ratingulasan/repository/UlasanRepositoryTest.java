@@ -1,7 +1,6 @@
 package jagongadpro.gametime_ratingulasan.repository;
 
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
-import jagongadpro.gametime_ratingulasan.model.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,8 +25,7 @@ class UlasanRepositoryTest {
         ulasan1 = new Ulasan();
         ulasan1.setIdUser("user123");
         ulasan1.setDate(LocalDate.now());
-        Game game1 = new Game();
-        game1.setId("game123");
+        String game1 = "game1";
         ulasan1.setGame(game1);
         ulasan1.setRating(3);
         ulasan1.setDeskripsi("Great game!");
@@ -34,8 +33,7 @@ class UlasanRepositoryTest {
         ulasan2 = new Ulasan();
         ulasan2.setIdUser("user124");
         ulasan2.setDate(LocalDate.now().minusDays(1));
-        Game game2 = new Game();
-        game2.setId("game124");
+        String game2 = "game2";
         ulasan2.setGame(game2);
         ulasan2.setRating(5);
         ulasan2.setDeskripsi("Excellent game!");
@@ -86,10 +84,9 @@ class UlasanRepositoryTest {
     void testFindAll() {
         repository.create(ulasan1);
         repository.create(ulasan2);
-        Iterator<Ulasan> allUlasan = repository.findAll();
-        assertTrue(allUlasan.hasNext());
-        allUlasan.next(); // Consume the first
-        assertTrue(allUlasan.hasNext());
+        List<Ulasan> allUlasan = repository.findAll();
+        assertFalse(allUlasan.isEmpty());
+        assertTrue(allUlasan.size() == 2);
     }
 
     @Test
@@ -101,6 +98,6 @@ class UlasanRepositoryTest {
     @Test
     void testFindAllByGameId() {
         repository.create(ulasan1);
-        assertTrue(!repository.findAllByGameId("game123").isEmpty());
+        assertTrue(!repository.findAllByGameId("game1").isEmpty());
     }
 }

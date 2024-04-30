@@ -18,8 +18,8 @@ public class UlasanRepository {
         return ulasan;
     }
 
-    public Iterator<Ulasan> findAll(){
-        return ulasanData.iterator();
+    public List<Ulasan> findAll(){
+        return ulasanData;
     }
 
     public List<Ulasan> findAllByUserId(String userId) {
@@ -35,7 +35,7 @@ public class UlasanRepository {
     public List<Ulasan> findAllByGameId(String gameId) {
         List<Ulasan> ulasanByGame = new ArrayList<>();
         for (Ulasan ulasan : ulasanData) {
-            if (ulasan.getGame().getId().equals(gameId)) {
+            if (ulasan.getGame().equals(gameId)) {
                 ulasanByGame.add(ulasan);
             }
         }

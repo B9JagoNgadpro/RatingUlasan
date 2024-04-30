@@ -1,6 +1,5 @@
 package jagongadpro.gametime_ratingulasan.service;
 
-import jagongadpro.gametime_ratingulasan.model.Game;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,13 +23,11 @@ class UlasanServiceImplTest {
     private UlasanServiceImpl ulasanService;
 
     private Ulasan ulasan;
-    private Game game;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        game = new Game("game1", "seller1", "Game One", "First game description", 50, "Adventure", 10);
-        ulasan = new Ulasan("ulasan1", "user1", game, 5, "Excellent!", LocalDate.now());
+        ulasan = new Ulasan("ulasan1", "user1", "game1", 5, "Excellent!", LocalDate.now());
     }
 
     @Test
@@ -45,7 +40,7 @@ class UlasanServiceImplTest {
 
     @Test
     void testFindAllUlasans() {
-        when(ulasanRepository.findAll()).thenReturn(Arrays.asList(ulasan).iterator());
+        when(ulasanRepository.findAll()).thenReturn(Arrays.asList(ulasan));
         List<Ulasan> ulasanList = ulasanService.findAllUlasans();
         assertFalse(ulasanList.isEmpty());
         assertEquals(1, ulasanList.size());
@@ -67,7 +62,7 @@ class UlasanServiceImplTest {
         List<Ulasan> result = ulasanService.findUlasansByGameId("game1");
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(game.getId(), result.get(0).getGame().getId());
+        assertEquals(ulasan.getGame(), result.get(0).getGame());
     }
 
     @Test
