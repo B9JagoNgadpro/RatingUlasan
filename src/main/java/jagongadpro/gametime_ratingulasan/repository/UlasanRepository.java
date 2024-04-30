@@ -19,7 +19,7 @@ public class UlasanRepository {
     }
 
     public List<Ulasan> findAll(){
-        return ulasanData;
+        return new ArrayList<>(ulasanData); // Return a copy of the list to avoid external modifications
     }
 
     public List<Ulasan> findAllByUserId(String userId) {
@@ -52,10 +52,10 @@ public class UlasanRepository {
     }
 
     public Ulasan edit(Ulasan editedUlasan) {
-        String ulasanId = editedUlasan.getId();
-        Ulasan existingUlasan = findById(ulasanId);
+        Ulasan existingUlasan = findById(editedUlasan.getId());
         int indexOfUlasan = ulasanData.indexOf(existingUlasan);
 
+        // Replace existing Ulasan with the edited one
         ulasanData.set(indexOfUlasan, editedUlasan);
         return editedUlasan;
     }
@@ -65,6 +65,4 @@ public class UlasanRepository {
         ulasanData.remove(ulasan);
         return ulasan;
     }
-
-
 }
