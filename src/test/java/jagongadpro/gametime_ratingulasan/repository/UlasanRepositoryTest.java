@@ -7,9 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
-import java.util.Iterator;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,21 +20,23 @@ class UlasanRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        ulasan1 = new Ulasan();
-        ulasan1.setIdUser("user123");
-        ulasan1.setDate(LocalDate.now());
-        String game1 = "game1";
-        ulasan1.setGame(game1);
-        ulasan1.setRating(3);
-        ulasan1.setDeskripsi("Great game!");
+        ulasan1 = new Ulasan.Builder()
+                .id("ulasan1")
+                .idUser("user123")
+                .game("game1")
+                .rating(3)
+                .deskripsi("Great game!")
+                .date(LocalDate.now())
+                .build();
 
-        ulasan2 = new Ulasan();
-        ulasan2.setIdUser("user124");
-        ulasan2.setDate(LocalDate.now().minusDays(1));
-        String game2 = "game2";
-        ulasan2.setGame(game2);
-        ulasan2.setRating(5);
-        ulasan2.setDeskripsi("Excellent game!");
+        ulasan2 = new Ulasan.Builder()
+                .id("ulasan2")
+                .idUser("user124")
+                .game("game2")
+                .rating(5)
+                .deskripsi("Excellent game!")
+                .date(LocalDate.now().minusDays(1))
+                .build();
     }
 
     @Test
@@ -52,7 +52,7 @@ class UlasanRepositoryTest {
 
     @Test
     void testCreateUlasanUUID() {
-        Ulasan newUlasan = new Ulasan();
+        Ulasan newUlasan = new Ulasan.Builder().build();
         Ulasan savedUlasan = repository.create(newUlasan);
         assertNotNull(savedUlasan.getId());
         assertEquals(newUlasan, savedUlasan);
@@ -76,8 +76,8 @@ class UlasanRepositoryTest {
     void testEditUlasan() {
         Ulasan savedUlasan = repository.create(ulasan1);
         savedUlasan.setDeskripsi("Updated description");
-        Ulasan updatedUlasan = repository.edit(savedUlasan);
-        assertEquals("Updated description", updatedUlasan.getDeskripsi());
+        Ulasan resultUlasan = repository.edit(savedUlasan);
+        assertEquals("Updated description", resultUlasan.getDeskripsi());
     }
 
     @Test
@@ -86,7 +86,7 @@ class UlasanRepositoryTest {
         repository.create(ulasan2);
         List<Ulasan> allUlasan = repository.findAll();
         assertFalse(allUlasan.isEmpty());
-        assertTrue(allUlasan.size() == 2);
+        assertEquals(2, allUlasan.size());
     }
 
     @Test
@@ -98,6 +98,6 @@ class UlasanRepositoryTest {
     @Test
     void testFindAllByGameId() {
         repository.create(ulasan1);
-        assertTrue(!repository.findAllByGameId("game1").isEmpty());
+        assertFalse(repository.findAllByGameId("game1").isEmpty());
     }
 }
