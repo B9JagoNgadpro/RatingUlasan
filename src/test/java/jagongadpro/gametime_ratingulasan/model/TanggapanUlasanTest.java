@@ -4,30 +4,32 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
+
 public class TanggapanUlasanTest {
     private TanggapanUlasan tanggapanUlasan;
 
     @BeforeEach
     void setUp() {
-        Ulasan ulasan = new Ulasan();
-        ulasan.setId("ulasan1");
-        ulasan.setIdUser("user123");
-        ulasan.setGame("game1");
-        ulasan.setRating(4);
-        ulasan.setDeskripsi("Game seru untuk action.");
-        ulasan.setDate(LocalDate.now());
+        Ulasan ulasan = new Ulasan.Builder()
+                .id("ulasan1")
+                .idUser("user123")
+                .game("game1")
+                .rating(4)
+                .deskripsi("Game seru untuk action.")
+                .date(LocalDate.now())
+                .build();
 
-        tanggapanUlasan = new TanggapanUlasan();
-        tanggapanUlasan.setId("tanggapanUlasan1");
-        tanggapanUlasan.setPenjualId("penjual123");
-        tanggapanUlasan.setUlasan(ulasan);
-        tanggapanUlasan.setTanggapan("Terima kasih reviewnya!");
-        tanggapanUlasan.setDate(LocalDate.now());
+        tanggapanUlasan = new TanggapanUlasan.Builder()
+                .id("tanggapanUlasan1")
+                .penjualId("penjual123")
+                .ulasan(ulasan)
+                .tanggapan("Terima kasih reviewnya!")
+                .date(LocalDate.now())
+                .build();
     }
 
     @Test
     public void testConstructor() {
-        TanggapanUlasan tanggapanUlasan = new TanggapanUlasan();
         assertNotNull(tanggapanUlasan);
     }
 
@@ -42,17 +44,21 @@ public class TanggapanUlasanTest {
 
     @Test
     public void testValidationTanggapan() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            tanggapanUlasan.setTanggapan(null);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new TanggapanUlasan.Builder()
+                    .tanggapan("") // Empty tanggapan
+                    .build();
         });
+        assertTrue(exception.getMessage().contains("Tanggapan tidak boleh kosong"));
     }
 
     @Test
     public void testValidationUlasan() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            tanggapanUlasan.setUlasan(null);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            new TanggapanUlasan.Builder()
+                    .ulasan(null) // Null ulasan
+                    .build();
         });
+        assertTrue(exception.getMessage().contains("Ulasan tidak boleh kosong"));
     }
-
-
 }
