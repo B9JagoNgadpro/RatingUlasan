@@ -1,6 +1,6 @@
 package jagongadpro.gametime_ratingulasan.controller;
 
-import jagongadpro.gametime_ratingulasan.dto.UlasanDTO;
+//import jagongadpro.gametime_ratingulasan.dto.UlasanDTO;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import jagongadpro.gametime_ratingulasan.service.UlasanService;
 
@@ -76,7 +76,7 @@ public class UlasanController {
         return String.format("%s\n%s", ulasanSebelum, ulasanSesudah);
     }
 
-    @DeleteMapping("delete/{idUlasan}")
+    @DeleteMapping("/delete/{idUlasan}")
     public String deleteUlasan(@PathVariable String idUlasan, Model model) {
         Ulasan ulasan = service.deleteUlasan(idUlasan);
         return "ulasan " + ulasan.getId() + " berhasil dihapus";
