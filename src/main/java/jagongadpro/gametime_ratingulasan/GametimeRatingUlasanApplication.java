@@ -8,5 +8,4 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class GametimeRatingUlasanApplication {
 
     public static void main(String[] args) { SpringApplication.run(GametimeRatingUlasanApplication.class, args);}
-
 }
