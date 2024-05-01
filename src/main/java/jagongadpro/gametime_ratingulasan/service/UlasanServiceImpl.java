@@ -34,7 +34,11 @@ public class UlasanServiceImpl implements UlasanService {
 
     @Override
     public Ulasan findUlasanById(String ulasanId) {
-        return ulasanRepository.findById(ulasanId);
+        try {
+            return ulasanRepository.findById(ulasanId);
+        }catch (IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     @Override

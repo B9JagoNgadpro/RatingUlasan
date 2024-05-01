@@ -98,10 +98,7 @@ class UlasanServiceImplTest {
 
     @Test
     void testFindByIdThrowsException() {
-        when(ulasanRepository.findById("nonexistent")).thenThrow(new IllegalArgumentException("Invalid ulasan Id: nonexistent"));
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ulasanService.findUlasanById("nonexistent");
-        });
-        assertEquals("Invalid ulasan Id: nonexistent", exception.getMessage());
+        when(ulasanRepository.findById("nonexistent")).thenReturn(null);
+        assertNull(ulasanService.findUlasanById("nonexistent"));
     }
 }
