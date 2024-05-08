@@ -1,7 +1,6 @@
 package jagongadpro.gametime_ratingulasan.service;
 
 import jagongadpro.gametime_ratingulasan.model.TanggapanUlasan;
-import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import jagongadpro.gametime_ratingulasan.repository.TanggapanUlasanRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,28 +11,27 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TanggapanUlasanServiceImplTest {
+
     @Mock
     private TanggapanUlasanRepository tanggapanUlasanRepository;
+
     @InjectMocks
     private TanggapanUlasanServiceImpl tanggapanUlasanService;
-
 
     private TanggapanUlasan tanggapanUlasan;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        Ulasan ulasanBaru = new Ulasan.Builder().build();
-        ulasanBaru.setIdUser("user1");
-
         tanggapanUlasan = new TanggapanUlasan.Builder()
-                .id("1").penjualId("penjual1")
-                .ulasan(ulasanBaru)
+                .id("1")
+                .penjualId("penjual1")
                 .tanggapan("Makasih udah membeli!")
                 .date(LocalDate.now())
                 .build();
@@ -41,7 +39,7 @@ class TanggapanUlasanServiceImplTest {
 
     @Test
     void createTanggapanUlasanTest() {
-        when(tanggapanUlasanRepository.create(tanggapanUlasan)).thenReturn(tanggapanUlasan);
+        when(tanggapanUlasanRepository.save(tanggapanUlasan)).thenReturn(tanggapanUlasan);
         TanggapanUlasan created = tanggapanUlasanService.createTanggapanUlasan(tanggapanUlasan);
         assertNotNull(created);
         assertEquals("Makasih udah membeli!", created.getTanggapan());
@@ -49,30 +47,31 @@ class TanggapanUlasanServiceImplTest {
 
     @Test
     void updateTanggapanUlasanTest() {
-        when(tanggapanUlasanRepository.update(tanggapanUlasan)).thenReturn(tanggapanUlasan);
+        when(tanggapanUlasanRepository.save(tanggapanUlasan)).thenReturn(tanggapanUlasan);
         TanggapanUlasan updated = tanggapanUlasanService.updateTanggapanUlasan(tanggapanUlasan);
         assertNotNull(updated);
     }
 
     @Test
     void deleteTanggapanUlasanTest() {
-        doNothing().when(tanggapanUlasanRepository).delete("1");
+        doNothing().when(tanggapanUlasanRepository).deleteById("1");
         tanggapanUlasanService.deleteTanggapanUlasan("1");
-        verify(tanggapanUlasanRepository).delete("1");
+        verify(tanggapanUlasanRepository).deleteById("1");
     }
 
     @Test
     void findTanggapanUlasanByIdTest() {
-        when(tanggapanUlasanRepository.findById("1")).thenReturn(tanggapanUlasan);
-        TanggapanUlasan found = tanggapanUlasanService.findTanggapanUlasanById("1");
-        assertEquals("1", found.getId());
+        when(tanggapanUlasanRepository.findById("1")).thenReturn(Optional.of(tanggapanUlasan));
+        Optional<TanggapanUlasan> found = tanggapanUlasanService.findTanggapanUlasanById("1");
+        assertTrue(found.isPresent());
+        assertEquals("1", found.get().getId());
     }
 
     @Test
     void findTanggapanUlasanByUlasanIdTest() {
-        when(tanggapanUlasanRepository.findByUlasanId("user1")).thenReturn(tanggapanUlasan);
-        TanggapanUlasan found = tanggapanUlasanService.findTanggapanUlasanByUlasanId("user1");
-        assertNotNull(found);
+        when(tanggapanUlasanRepository.findByUlasanId("ulasanId")).thenReturn(tanggapanUlasan);
+        Optional<TanggapanUlasan> found = tanggapanUlasanService.findTanggapanUlasanByUlasanId("ulasanId");
+        assertTrue(found.isPresent());
     }
 
     @Test

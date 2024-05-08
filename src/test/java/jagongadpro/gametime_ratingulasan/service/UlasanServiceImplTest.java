@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,7 +40,7 @@ class UlasanServiceImplTest {
 
     @Test
     void testCreateUlasan() {
-        when(ulasanRepository.create(ulasan)).thenReturn(ulasan);
+        when(ulasanRepository.save(ulasan)).thenReturn(ulasan);
         Ulasan created = ulasanService.createUlasan(ulasan);
         assertNotNull(created);
         assertEquals(ulasan.getId(), created.getId());
@@ -56,7 +57,7 @@ class UlasanServiceImplTest {
 
     @Test
     void testFindUlasansByUserId() {
-        when(ulasanRepository.findAllByUserId("user1")).thenReturn(Arrays.asList(ulasan));
+        when(ulasanRepository.findAllByIdUser("user1")).thenReturn(Arrays.asList(ulasan));
         List<Ulasan> result = ulasanService.findUlasansByUserId("user1");
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
@@ -65,7 +66,7 @@ class UlasanServiceImplTest {
 
     @Test
     void testFindUlasansByGameId() {
-        when(ulasanRepository.findAllByGameId("game1")).thenReturn(Arrays.asList(ulasan));
+        when(ulasanRepository.findAllByGame("game1")).thenReturn(Arrays.asList(ulasan));
         List<Ulasan> result = ulasanService.findUlasansByGameId("game1");
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
@@ -74,15 +75,15 @@ class UlasanServiceImplTest {
 
     @Test
     void testFindUlasanById() {
-        when(ulasanRepository.findById("ulasan1")).thenReturn(ulasan);
-        Ulasan found = ulasanService.findUlasanById("ulasan1");
-        assertNotNull(found);
-        assertEquals(ulasan.getId(), found.getId());
+        when(ulasanRepository.findById("ulasan1")).thenReturn(Optional.of(ulasan));
+        Optional<Ulasan> found = ulasanService.findUlasanById("ulasan1");
+        assertTrue(found.isPresent());
+        assertEquals(ulasan.getId(), found.get().getId());
     }
 
     @Test
     void testUpdateUlasan() {
-        when(ulasanRepository.edit(ulasan)).thenReturn(ulasan);
+        when(ulasanRepository.save(ulasan)).thenReturn(ulasan);
         Ulasan updated = ulasanService.updateUlasan(ulasan);
         assertNotNull(updated);
         assertEquals(ulasan.getId(), updated.getId());
@@ -90,15 +91,15 @@ class UlasanServiceImplTest {
 
     @Test
     void testDeleteUlasan() {
-        when(ulasanRepository.delete("ulasan1")).thenReturn(ulasan);
-        Ulasan deleted = ulasanService.deleteUlasan("ulasan1");
-        assertNotNull(deleted);
-        assertEquals(ulasan.getId(), deleted.getId());
+        doNothing().when(ulasanRepository).deleteById("ulasan1");
+        assertDoesNotThrow(() -> ulasanService.deleteUlasan("ulasan1"));
+        verify(ulasanRepository).deleteById("ulasan1");
     }
 
     @Test
     void testFindByIdThrowsException() {
-        when(ulasanRepository.findById("nonexistent")).thenReturn(null);
-        assertNull(ulasanService.findUlasanById("nonexistent"));
+        when(ulasanRepository.findById("nonexistent")).thenReturn(Optional.empty());
+        Optional<Ulasan> result = ulasanService.findUlasanById("nonexistent");
+        assertFalse(result.isPresent());
     }
 }

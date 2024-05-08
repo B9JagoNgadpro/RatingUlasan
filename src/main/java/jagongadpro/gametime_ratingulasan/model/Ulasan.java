@@ -1,17 +1,32 @@
 package jagongadpro.gametime_ratingulasan.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Entity
+@Table(name = "ulasan")
 public class Ulasan {
+
+    @Id
     private String id;
+
+    @Column(name = "user_id", nullable = false)
     private String idUser;
+
+    @Column(nullable = false)
     private String game;
+
+    @Column(nullable = false)
     private Integer rating;
+
+    @Column(nullable = false)
     private String deskripsi;
+
+    @Column(nullable = false)
     private LocalDate date;
 
     private Ulasan(Builder builder) {
@@ -21,6 +36,10 @@ public class Ulasan {
         this.rating = builder.rating;
         this.deskripsi = builder.deskripsi;
         this.date = builder.date;
+    }
+
+    public Ulasan() {
+        
     }
 
     public static class Builder {
