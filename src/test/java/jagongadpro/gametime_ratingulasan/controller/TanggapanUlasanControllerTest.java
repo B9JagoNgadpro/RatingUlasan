@@ -11,10 +11,9 @@ import jagongadpro.gametime_ratingulasan.service.TanggapanUlasanService;
 import jagongadpro.gametime_ratingulasan.service.UlasanService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Map;
 
 @WebMvcTest(TanggapanUlasanController.class)
@@ -45,7 +45,6 @@ public class TanggapanUlasanControllerTest {
     @BeforeEach
     public void setup() {
         mockUlasan = new Ulasan.Builder().id("1").build();
-
         mockTanggapan = new TanggapanUlasan.Builder()
                 .id("1")
                 .penjualId("seller1")
@@ -57,7 +56,7 @@ public class TanggapanUlasanControllerTest {
 
     @Test
     public void testCreateTanggapanPost_Success() throws Exception {
-        when(ulasanService.findUlasanById("1")).thenReturn(mockUlasan);
+        when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(mockUlasan));
         when(tanggapanUlasanService.createTanggapanUlasan(any(TanggapanUlasan.class))).thenReturn(mockTanggapan);
 
         mockMvc.perform(post("/penilaian-produk/create")
@@ -69,12 +68,12 @@ public class TanggapanUlasanControllerTest {
                                 "tanggapan", "Response text"
                         ))))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("tanggapan untuk 1 berhasil dibuat dengan id 1")));
+                .andExpect(content().string(containsString("Tanggapan created successfully")));
     }
 
     @Test
     public void testCreateTanggapanPost_UlasanNotFound() throws Exception {
-        when(ulasanService.findUlasanById("1")).thenReturn(null);
+        when(ulasanService.findUlasanById("1")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/penilaian-produk/create")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,26 +83,25 @@ public class TanggapanUlasanControllerTest {
                                 "ulasan", "1",
                                 "tanggapan", "Response text"
                         ))))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("ulasan tidak ditemukan")));
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(containsString("Ulasan not found")));
     }
 
     @Test
     public void testGetTanggapan_Found() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(mockTanggapan);
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
 
         mockMvc.perform(get("/penilaian-produk/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("tanggapan untuk 1ditemukan")));
+                .andExpect(jsonPath("$.id").value("1"));
     }
 
     @Test
     public void testGetTanggapan_NotFound() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(null);
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/penilaian-produk/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("tidak ditemukan")));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -112,7 +110,7 @@ public class TanggapanUlasanControllerTest {
 
         mockMvc.perform(get("/penilaian-produk/user/seller1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("penjual seller1 sudah menanggapi 1 ulasan")));
+                .andExpect(jsonPath("$[0].penjualId").value("seller1"));
     }
 
     @Test
@@ -120,27 +118,27 @@ public class TanggapanUlasanControllerTest {
         when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(Arrays.asList());
 
         mockMvc.perform(get("/penilaian-produk/user/seller1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("penjual seller1 belum menanggapi ulasan")));
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void testEditTanggapan_Success() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(mockTanggapan);
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
 
         mockMvc.perform(patch("/penilaian-produk/edit/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Map.of("tanggapan", "Updated response"))))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("After: Updated response")));
+                .andExpect(content().string(containsString("Tanggapan updated successfully")));
     }
 
     @Test
     public void testDeleteTanggapan_Success() throws Exception {
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
         doNothing().when(tanggapanUlasanService).deleteTanggapanUlasan("1");
 
         mockMvc.perform(delete("/penilaian-produk/delete/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("tanggapan dengan id 1 berhasil didelete")));
+                .andExpect(content().string(containsString("Tanggapan deleted successfully")));
     }
 }
