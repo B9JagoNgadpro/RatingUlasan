@@ -1,7 +1,9 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "JagoNgadpro"
@@ -31,8 +33,35 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "B9JagoNgadpro_RatingUlasan")
+        property("sonar.organization", "b9jagongadpro")
+        property("sonar.java.binaries", ".")
+        property("sonar.gradle.skipCompile", "true")
+    }
+}
+
