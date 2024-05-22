@@ -39,7 +39,7 @@ public class Ulasan {
     }
 
     public Ulasan() {
-        
+
     }
 
     public static class Builder {
@@ -75,6 +75,8 @@ public class Ulasan {
                 } else {
                     this.rating = rating;
                 }
+            } else {
+                throw new IllegalArgumentException("Rating tidak boleh kosong");
             }
             return this;
         }
@@ -83,7 +85,7 @@ public class Ulasan {
             if (deskripsi != null && !deskripsi.isEmpty()) {
                 this.deskripsi = deskripsi;
             } else {
-                throw new IllegalArgumentException("Deskripsi tidak boleh kosong");
+                this.deskripsi = "";
             }
             return this;
         }

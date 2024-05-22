@@ -1,7 +1,6 @@
 package jagongadpro.gametime_ratingulasan.dto;
 
 import lombok.Data;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 

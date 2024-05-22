@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.Map;
 
 @WebMvcTest(TanggapanUlasanController.class)
-public class TanggapanUlasanControllerTest {
+class TanggapanUlasanControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +43,7 @@ public class TanggapanUlasanControllerTest {
     private TanggapanUlasan mockTanggapan;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         mockUlasan = new Ulasan.Builder().id("1").build();
         mockTanggapan = new TanggapanUlasan.Builder()
                 .id("1")
@@ -55,7 +55,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testCreateTanggapanPost_Success() throws Exception {
+    void testCreateTanggapanPost_Success() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(mockUlasan));
         when(tanggapanUlasanService.createTanggapanUlasan(any(TanggapanUlasan.class))).thenReturn(mockTanggapan);
 
@@ -72,7 +72,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testCreateTanggapanPost_UlasanNotFound() throws Exception {
+    void testCreateTanggapanPost_UlasanNotFound() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/penilaian-produk/create")
@@ -88,7 +88,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testGetTanggapan_Found() throws Exception {
+    void testGetTanggapan_Found() throws Exception {
         when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
 
         mockMvc.perform(get("/penilaian-produk/1"))
@@ -97,7 +97,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testGetTanggapan_NotFound() throws Exception {
+    void testGetTanggapan_NotFound() throws Exception {
         when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/penilaian-produk/1"))
@@ -105,7 +105,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testGetAllTanggapanPenjual() throws Exception {
+    void testGetAllTanggapanPenjual() throws Exception {
         when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(Arrays.asList(mockTanggapan));
 
         mockMvc.perform(get("/penilaian-produk/user/seller1"))
@@ -114,7 +114,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testGetAllTanggapanPenjual_NoneFound() throws Exception {
+    void testGetAllTanggapanPenjual_NoneFound() throws Exception {
         when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(Arrays.asList());
 
         mockMvc.perform(get("/penilaian-produk/user/seller1"))
@@ -122,7 +122,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testEditTanggapan_Success() throws Exception {
+    void testEditTanggapan_Success() throws Exception {
         when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
 
         mockMvc.perform(patch("/penilaian-produk/edit/1")
@@ -133,7 +133,7 @@ public class TanggapanUlasanControllerTest {
     }
 
     @Test
-    public void testDeleteTanggapan_Success() throws Exception {
+    void testDeleteTanggapan_Success() throws Exception {
         when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
         doNothing().when(tanggapanUlasanService).deleteTanggapanUlasan("1");
 

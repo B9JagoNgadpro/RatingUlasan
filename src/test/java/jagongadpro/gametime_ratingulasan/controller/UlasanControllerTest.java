@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @WebMvcTest(UlasanController.class)
-public class UlasanControllerTest {
+class UlasanControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -37,7 +37,7 @@ public class UlasanControllerTest {
     private Ulasan ulasan;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         ulasan = new Ulasan.Builder()
                 .id("1")
                 .idUser("user1")
@@ -49,7 +49,7 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testCreateUlasan() throws Exception {
+    void testCreateUlasan() throws Exception {
         when(ulasanService.createUlasan(any(Ulasan.class))).thenReturn(ulasan);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/ulasan/create")
@@ -69,7 +69,7 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testGetUlasanNotFound() throws Exception {
+    void testGetUlasanNotFound() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.empty());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/1"))
@@ -79,7 +79,7 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testGetUlasanFound() throws Exception {
+    void testGetUlasanFound() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(ulasan));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/1"))
@@ -90,7 +90,7 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testGetUlasanUser() throws Exception {
+    void testGetUlasanUser() throws Exception {
         when(ulasanService.findUlasansByUserId("user1")).thenReturn(Arrays.asList(ulasan));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/user/user1"))
@@ -101,7 +101,38 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testEditUlasan() throws Exception {
+    void testGetUlasanUserNotFound() throws Exception {
+        when(ulasanService.findUlasansByUserId("user1")).thenReturn(Arrays.asList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/user/user1"))
+                .andExpect(status().isNotFound());
+
+        verify(ulasanService, times(1)).findUlasansByUserId("user1");
+    }
+
+    @Test
+    void testGetUlasanGame() throws Exception {
+        when(ulasanService.findUlasansByGameId("game1")).thenReturn(Arrays.asList(ulasan));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/game/game1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].game").value("game1"));
+
+        verify(ulasanService, times(1)).findUlasansByGameId("game1");
+    }
+
+    @Test
+    void testGetUlasanGameNotFound() throws Exception {
+        when(ulasanService.findUlasansByGameId("game1")).thenReturn(Arrays.asList());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/ulasan/game/game1"))
+                .andExpect(status().isNotFound());
+
+        verify(ulasanService, times(1)).findUlasansByGameId("game1");
+    }
+
+    @Test
+    void testEditUlasan() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(ulasan));
         when(ulasanService.updateUlasan(any(Ulasan.class))).thenReturn(ulasan);
 
@@ -118,7 +149,7 @@ public class UlasanControllerTest {
     }
 
     @Test
-    public void testDeleteUlasan() throws Exception {
+    void testDeleteUlasan() throws Exception {
         when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(ulasan));
         doNothing().when(ulasanService).deleteUlasan("1");
 
