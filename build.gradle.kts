@@ -1,8 +1,9 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
-    jacoco
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "JagoNgadpro"
@@ -47,14 +48,20 @@ tasks.test {
 }
 
 tasks.jacocoTestReport {
-    classDirectories.setFrom(files(classDirectories.files.map {
-        fileTree(it) { exclude("**/*Application**") }
-    }))
-    dependsOn(tasks.test) // tests are required to run before generating the report
+    dependsOn(tasks.test)
+
     reports {
-        xml.required.set(false)
-        csv.required.set(false)
-        html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
+        xml.required = true
+        html.required = true
+    }
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "B9JagoNgadpro_RatingUlasan")
+        property("sonar.organization", "b9jagongadpro")
+        property("sonar.java.binaries", ".")
+        property("sonar.gradle.skipCompile", "true")
     }
 }
 
