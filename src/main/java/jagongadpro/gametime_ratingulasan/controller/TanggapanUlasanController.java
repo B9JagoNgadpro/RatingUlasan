@@ -2,6 +2,7 @@ package jagongadpro.gametime_ratingulasan.controller;
 
 import jagongadpro.gametime_ratingulasan.model.TanggapanUlasan;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
+import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
 import jagongadpro.gametime_ratingulasan.service.TanggapanUlasanService;
 import jagongadpro.gametime_ratingulasan.service.UlasanService;
 
@@ -17,10 +18,13 @@ import java.util.Map;
 @RequestMapping("/penilaian-produk")
 public class TanggapanUlasanController {
 
-    @Autowired
-    private UlasanService ulasanService;
-    @Autowired
-    private TanggapanUlasanService service;
+    private final UlasanService ulasanService;
+    private final TanggapanUlasanService service;
+
+    private TanggapanUlasanController(UlasanService ulasanService, TanggapanUlasanService service) {
+        this.ulasanService = ulasanService;
+        this.service = service;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createTanggapanPost(@RequestBody Map<String, Object> data) {
@@ -38,7 +42,7 @@ public class TanggapanUlasanController {
     }
 
     @GetMapping("/{idTanggapan}")
-    public ResponseEntity<?> getTanggapan(@PathVariable String idTanggapan) {
+    public ResponseEntity<TanggapanUlasan> getTanggapan(@PathVariable String idTanggapan) {
         return service.findTanggapanUlasanById(idTanggapan)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

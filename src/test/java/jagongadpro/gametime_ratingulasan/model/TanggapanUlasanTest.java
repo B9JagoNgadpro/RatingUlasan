@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TanggapanUlasanTest {
+class TanggapanUlasanTest {
     private TanggapanUlasan tanggapanUlasan;
 
     @BeforeEach
@@ -29,12 +29,12 @@ public class TanggapanUlasanTest {
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertNotNull(tanggapanUlasan);
     }
 
     @Test
-    public void testGetter() {
+     void testGetter() {
         assertEquals("tanggapanUlasan1", tanggapanUlasan.getId());
         assertEquals("penjual123", tanggapanUlasan.getPenjualId());
         assertNotNull(tanggapanUlasan.getUlasan());
@@ -43,7 +43,7 @@ public class TanggapanUlasanTest {
     }
 
     @Test
-    public void testValidationTanggapan() {
+     void testValidationTanggapan() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new TanggapanUlasan.Builder()
                     .tanggapan("") // Empty tanggapan
@@ -53,7 +53,7 @@ public class TanggapanUlasanTest {
     }
 
     @Test
-    public void testValidationUlasan() {
+     void testValidationUlasan() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new TanggapanUlasan.Builder()
                     .ulasan(null) // Null ulasan

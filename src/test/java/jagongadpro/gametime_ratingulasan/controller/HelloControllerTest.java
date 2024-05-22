@@ -1,6 +1,5 @@
 package jagongadpro.gametime_ratingulasan.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,7 +14,7 @@ public class HelloControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testCreateHomePage() throws Exception {
+    void testCreateHomePage() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())           // Expect HTTP 200 status
                 .andExpect(MockMvcResultMatchers.view().name("deploySementara"));  // Expect the view name to be "deploySementara"

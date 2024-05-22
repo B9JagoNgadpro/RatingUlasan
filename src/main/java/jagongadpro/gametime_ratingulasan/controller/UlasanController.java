@@ -1,6 +1,7 @@
 package jagongadpro.gametime_ratingulasan.controller;
 
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
+import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
 import jagongadpro.gametime_ratingulasan.service.UlasanService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,11 @@ import java.util.Map;
 @RequestMapping("/ulasan")
 public class UlasanController {
 
-    @Autowired
-    private UlasanService service;
+    private final UlasanService service;
+
+    private UlasanController(UlasanService service) {
+        this.service = service;
+    }
 
     @PostMapping("/create")
     public ResponseEntity<Ulasan> createUlasanPost(@RequestBody Map<String, Object> data) {
@@ -49,7 +53,7 @@ public class UlasanController {
     }
 
     @GetMapping("game/{idGame}")
-    public ResponseEntity<Object> getUlasanGame(@PathVariable String idGame) {
+    public ResponseEntity<List<Ulasan>> getUlasanGame(@PathVariable String idGame) {
         List<Ulasan> listUlasan = service.findUlasansByGameId(idGame);
         if (listUlasan.isEmpty()) {
             return ResponseEntity.notFound().build();
