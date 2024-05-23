@@ -2,12 +2,12 @@ package jagongadpro.gametime_ratingulasan.service;
 
 import jagongadpro.gametime_ratingulasan.model.TanggapanUlasan;
 import jagongadpro.gametime_ratingulasan.repository.TanggapanUlasanRepository;
-import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class TanggapanUlasanServiceImpl implements TanggapanUlasanService {
@@ -18,38 +18,46 @@ public class TanggapanUlasanServiceImpl implements TanggapanUlasanService {
         this.tanggapanUlasanRepository = tanggapanUlasanRepository;
     }
 
+    @Async("taskExecutor")
     @Override
-    public TanggapanUlasan createTanggapanUlasan(TanggapanUlasan tanggapanUlasan) {
-        return tanggapanUlasanRepository.save(tanggapanUlasan);
+    public CompletableFuture<TanggapanUlasan> createTanggapanUlasan(TanggapanUlasan tanggapanUlasan) {
+        return CompletableFuture.completedFuture(tanggapanUlasanRepository.save(tanggapanUlasan));
     }
 
+    @Async("taskExecutor")
     @Override
-    public TanggapanUlasan updateTanggapanUlasan(TanggapanUlasan tanggapanUlasan) {
-        return tanggapanUlasanRepository.save(tanggapanUlasan);
+    public CompletableFuture<TanggapanUlasan> updateTanggapanUlasan(TanggapanUlasan tanggapanUlasan) {
+        return CompletableFuture.completedFuture(tanggapanUlasanRepository.save(tanggapanUlasan));
     }
 
+    @Async("taskExecutor")
     @Override
-    public void deleteTanggapanUlasan(String id) {
+    public CompletableFuture<Void> deleteTanggapanUlasan(String id) {
         tanggapanUlasanRepository.deleteById(id);
+        return CompletableFuture.completedFuture(null);
     }
 
+    @Async("taskExecutor")
     @Override
-    public Optional<TanggapanUlasan> findTanggapanUlasanById(String id) {
-        return tanggapanUlasanRepository.findById(id);
+    public CompletableFuture<Optional<TanggapanUlasan>> findTanggapanUlasanById(String id) {
+        return CompletableFuture.completedFuture(tanggapanUlasanRepository.findById(id));
     }
 
+    @Async("taskExecutor")
     @Override
-    public Optional<TanggapanUlasan> findTanggapanUlasanByUlasanId(String ulasanId) {
-        return Optional.ofNullable(tanggapanUlasanRepository.findByUlasanId(ulasanId));
+    public CompletableFuture<Optional<TanggapanUlasan>> findTanggapanUlasanByUlasanId(String ulasanId) {
+        return CompletableFuture.completedFuture(Optional.ofNullable(tanggapanUlasanRepository.findByUlasanId(ulasanId)));
     }
 
+    @Async("taskExecutor")
     @Override
-    public List<TanggapanUlasan> findAllTanggapanUlasan() {
-        return tanggapanUlasanRepository.findAll();
+    public CompletableFuture<List<TanggapanUlasan>> findAllTanggapanUlasan() {
+        return CompletableFuture.completedFuture(tanggapanUlasanRepository.findAll());
     }
 
+    @Async("taskExecutor")
     @Override
-    public List<TanggapanUlasan> findAllTanggapanUlasanByPenjualId(String penjualId) {
-        return tanggapanUlasanRepository.findAllByPenjualId(penjualId);
+    public CompletableFuture<List<TanggapanUlasan>> findAllTanggapanUlasanByPenjualId(String penjualId) {
+        return CompletableFuture.completedFuture(tanggapanUlasanRepository.findAllByPenjualId(penjualId));
     }
 }

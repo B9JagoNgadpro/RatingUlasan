@@ -2,11 +2,12 @@ package jagongadpro.gametime_ratingulasan.service;
 
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import jagongadpro.gametime_ratingulasan.repository.UlasanRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UlasanServiceImpl implements UlasanService {
@@ -17,36 +18,46 @@ public class UlasanServiceImpl implements UlasanService {
         this.ulasanRepository = ulasanRepository;
     }
 
+    @Async("taskExecutor")
     @Override
-    public Ulasan createUlasan(Ulasan ulasan) {
-        return ulasanRepository.save(ulasan);
+    public CompletableFuture<Ulasan> createUlasan(Ulasan ulasan) {
+        return CompletableFuture.supplyAsync(() -> {
+            Ulasan savedUlasan = ulasanRepository.save(ulasan);
+            return savedUlasan;
+        });
     }
 
+    @Async("taskExecutor")
     @Override
-    public List<Ulasan> findAllUlasans() {
-        return ulasanRepository.findAll();
+    public CompletableFuture<List<Ulasan>> findAllUlasans() {
+        return CompletableFuture.completedFuture(ulasanRepository.findAll());
     }
 
+    @Async("taskExecutor")
     @Override
-    public List<Ulasan> findUlasansByUserId(String idUser) {
-        return ulasanRepository.findAllByIdUser(idUser);
+    public CompletableFuture<List<Ulasan>> findUlasansByUserId(String idUser) {
+        return CompletableFuture.completedFuture(ulasanRepository.findAllByIdUser(idUser));
     }
 
+    @Async("taskExecutor")
     @Override
-    public List<Ulasan> findUlasansByGameId(String game) {
-        return ulasanRepository.findAllByGame(game);
+    public CompletableFuture<List<Ulasan>> findUlasansByGameId(String game) {
+        return CompletableFuture.completedFuture(ulasanRepository.findAllByGame(game));
     }
 
+    @Async("taskExecutor")
     @Override
-    public Optional<Ulasan> findUlasanById(String ulasanId) {
-        return ulasanRepository.findById(ulasanId);
+    public CompletableFuture<Optional<Ulasan>> findUlasanById(String ulasanId) {
+        return CompletableFuture.completedFuture(ulasanRepository.findById(ulasanId));
     }
 
+    @Async("taskExecutor")
     @Override
-    public Ulasan updateUlasan(Ulasan ulasan) {
-        return ulasanRepository.save(ulasan);
+    public CompletableFuture<Ulasan> updateUlasan(Ulasan ulasan) {
+        return CompletableFuture.completedFuture(ulasanRepository.save(ulasan));
     }
 
+    @Async("taskExecutor")
     @Override
     public void deleteUlasan(String ulasanId) {
         ulasanRepository.deleteById(ulasanId);

@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,7 +41,8 @@ class TanggapanUlasanServiceImplTest {
     @Test
     void createTanggapanUlasanTest() {
         when(tanggapanUlasanRepository.save(tanggapanUlasan)).thenReturn(tanggapanUlasan);
-        TanggapanUlasan created = tanggapanUlasanService.createTanggapanUlasan(tanggapanUlasan);
+        CompletableFuture<TanggapanUlasan> createdFuture = tanggapanUlasanService.createTanggapanUlasan(tanggapanUlasan);
+        TanggapanUlasan created = createdFuture.join();
         assertNotNull(created);
         assertEquals("Makasih udah membeli!", created.getTanggapan());
     }
@@ -48,21 +50,24 @@ class TanggapanUlasanServiceImplTest {
     @Test
     void updateTanggapanUlasanTest() {
         when(tanggapanUlasanRepository.save(tanggapanUlasan)).thenReturn(tanggapanUlasan);
-        TanggapanUlasan updated = tanggapanUlasanService.updateTanggapanUlasan(tanggapanUlasan);
+        CompletableFuture<TanggapanUlasan> updatedFuture = tanggapanUlasanService.updateTanggapanUlasan(tanggapanUlasan);
+        TanggapanUlasan updated = updatedFuture.join();
         assertNotNull(updated);
     }
 
     @Test
     void deleteTanggapanUlasanTest() {
         doNothing().when(tanggapanUlasanRepository).deleteById("1");
-        tanggapanUlasanService.deleteTanggapanUlasan("1");
+        CompletableFuture<Void> deleteFuture = tanggapanUlasanService.deleteTanggapanUlasan("1");
+        deleteFuture.join();
         verify(tanggapanUlasanRepository).deleteById("1");
     }
 
     @Test
     void findTanggapanUlasanByIdTest() {
         when(tanggapanUlasanRepository.findById("1")).thenReturn(Optional.of(tanggapanUlasan));
-        Optional<TanggapanUlasan> found = tanggapanUlasanService.findTanggapanUlasanById("1");
+        CompletableFuture<Optional<TanggapanUlasan>> foundFuture = tanggapanUlasanService.findTanggapanUlasanById("1");
+        Optional<TanggapanUlasan> found = foundFuture.join();
         assertTrue(found.isPresent());
         assertEquals("1", found.get().getId());
     }
@@ -70,14 +75,16 @@ class TanggapanUlasanServiceImplTest {
     @Test
     void findTanggapanUlasanByUlasanIdTest() {
         when(tanggapanUlasanRepository.findByUlasanId("ulasanId")).thenReturn(tanggapanUlasan);
-        Optional<TanggapanUlasan> found = tanggapanUlasanService.findTanggapanUlasanByUlasanId("ulasanId");
+        CompletableFuture<Optional<TanggapanUlasan>> foundFuture = tanggapanUlasanService.findTanggapanUlasanByUlasanId("ulasanId");
+        Optional<TanggapanUlasan> found = foundFuture.join();
         assertTrue(found.isPresent());
     }
 
     @Test
     void findAllTanggapanUlasanTest() {
         when(tanggapanUlasanRepository.findAll()).thenReturn(Arrays.asList(tanggapanUlasan));
-        List<TanggapanUlasan> all = tanggapanUlasanService.findAllTanggapanUlasan();
+        CompletableFuture<List<TanggapanUlasan>> allFuture = tanggapanUlasanService.findAllTanggapanUlasan();
+        List<TanggapanUlasan> all = allFuture.join();
         assertFalse(all.isEmpty());
         assertEquals(1, all.size());
     }
@@ -85,7 +92,8 @@ class TanggapanUlasanServiceImplTest {
     @Test
     void findAllTanggapanUlasanByPenjualIdTest() {
         when(tanggapanUlasanRepository.findAllByPenjualId("penjual1")).thenReturn(Arrays.asList(tanggapanUlasan));
-        List<TanggapanUlasan> byPenjual = tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("penjual1");
+        CompletableFuture<List<TanggapanUlasan>> byPenjualFuture = tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("penjual1");
+        List<TanggapanUlasan> byPenjual = byPenjualFuture.join();
         assertFalse(byPenjual.isEmpty());
         assertEquals(1, byPenjual.size());
     }

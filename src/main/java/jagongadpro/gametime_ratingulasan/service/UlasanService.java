@@ -3,29 +3,14 @@ package jagongadpro.gametime_ratingulasan.service;
 import jagongadpro.gametime_ratingulasan.model.Ulasan;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public interface UlasanService {
-    Ulasan createUlasan(Ulasan ulasan);
-    List<Ulasan> findAllUlasans();
-    List<Ulasan> findUlasansByUserId(String userId);
-    List<Ulasan> findUlasansByGameId(String gameId);
-    Optional<Ulasan> findUlasanById(String ulasanId);
-    Ulasan updateUlasan(Ulasan ulasan);
+    CompletableFuture<Ulasan> createUlasan(Ulasan ulasan);
+    CompletableFuture<List<Ulasan>> findAllUlasans();
+    CompletableFuture<List<Ulasan>> findUlasansByUserId(String userId);
+    CompletableFuture<List<Ulasan>> findUlasansByGameId(String gameId);
+    CompletableFuture<Optional<Ulasan>> findUlasanById(String ulasanId);
+    CompletableFuture<Ulasan> updateUlasan(Ulasan ulasan);
     void deleteUlasan(String ulasanId);
 }
-
-
-//package jagongadpro.gametime_ratingulasan.service;
-//
-//import jagongadpro.gametime_ratingulasan.model.Ulasan;
-//import java.util.List;
-//
-//public interface UlasanService {
-//    Ulasan createUlasan(Ulasan ulasan);
-//    List<Ulasan> findAllUlasans();
-//    List<Ulasan> findUlasansByUserId(String userId);
-//    List<Ulasan> findUlasansByGameId(String gameId);
-//    Ulasan findUlasanById(String ulasanId);
-//    Ulasan updateUlasan(Ulasan ulasan);
-//    Ulasan deleteUlasan(String ulasanId);
-//}

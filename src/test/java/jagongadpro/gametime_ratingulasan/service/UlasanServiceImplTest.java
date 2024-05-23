@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,7 +42,8 @@ class UlasanServiceImplTest {
     @Test
     void testCreateUlasan() {
         when(ulasanRepository.save(ulasan)).thenReturn(ulasan);
-        Ulasan created = ulasanService.createUlasan(ulasan);
+        CompletableFuture<Ulasan> createdFuture = ulasanService.createUlasan(ulasan);
+        Ulasan created = createdFuture.join();
         assertNotNull(created);
         assertEquals(ulasan.getId(), created.getId());
     }
@@ -49,7 +51,8 @@ class UlasanServiceImplTest {
     @Test
     void testFindAllUlasans() {
         when(ulasanRepository.findAll()).thenReturn(Arrays.asList(ulasan));
-        List<Ulasan> ulasanList = ulasanService.findAllUlasans();
+        CompletableFuture<List<Ulasan>> ulasanListFuture = ulasanService.findAllUlasans();
+        List<Ulasan> ulasanList = ulasanListFuture.join();
         assertFalse(ulasanList.isEmpty());
         assertEquals(1, ulasanList.size());
         assertEquals(ulasan.getId(), ulasanList.get(0).getId());
@@ -58,7 +61,8 @@ class UlasanServiceImplTest {
     @Test
     void testFindUlasansByUserId() {
         when(ulasanRepository.findAllByIdUser("user1")).thenReturn(Arrays.asList(ulasan));
-        List<Ulasan> result = ulasanService.findUlasansByUserId("user1");
+        CompletableFuture<List<Ulasan>> resultFuture = ulasanService.findUlasansByUserId("user1");
+        List<Ulasan> result = resultFuture.join();
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(ulasan.getIdUser(), result.get(0).getIdUser());
@@ -67,7 +71,8 @@ class UlasanServiceImplTest {
     @Test
     void testFindUlasansByGameId() {
         when(ulasanRepository.findAllByGame("game1")).thenReturn(Arrays.asList(ulasan));
-        List<Ulasan> result = ulasanService.findUlasansByGameId("game1");
+        CompletableFuture<List<Ulasan>> resultFuture = ulasanService.findUlasansByGameId("game1");
+        List<Ulasan> result = resultFuture.join();
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
         assertEquals(ulasan.getGame(), result.get(0).getGame());
@@ -76,7 +81,8 @@ class UlasanServiceImplTest {
     @Test
     void testFindUlasanById() {
         when(ulasanRepository.findById("ulasan1")).thenReturn(Optional.of(ulasan));
-        Optional<Ulasan> found = ulasanService.findUlasanById("ulasan1");
+        CompletableFuture<Optional<Ulasan>> foundFuture = ulasanService.findUlasanById("ulasan1");
+        Optional<Ulasan> found = foundFuture.join();
         assertTrue(found.isPresent());
         assertEquals(ulasan.getId(), found.get().getId());
     }
@@ -84,7 +90,8 @@ class UlasanServiceImplTest {
     @Test
     void testUpdateUlasan() {
         when(ulasanRepository.save(ulasan)).thenReturn(ulasan);
-        Ulasan updated = ulasanService.updateUlasan(ulasan);
+        CompletableFuture<Ulasan> updatedFuture = ulasanService.updateUlasan(ulasan);
+        Ulasan updated = updatedFuture.join();
         assertNotNull(updated);
         assertEquals(ulasan.getId(), updated.getId());
     }
@@ -99,7 +106,8 @@ class UlasanServiceImplTest {
     @Test
     void testFindByIdThrowsException() {
         when(ulasanRepository.findById("nonexistent")).thenReturn(Optional.empty());
-        Optional<Ulasan> result = ulasanService.findUlasanById("nonexistent");
+        CompletableFuture<Optional<Ulasan>> resultFuture = ulasanService.findUlasanById("nonexistent");
+        Optional<Ulasan> result = resultFuture.join();
         assertFalse(result.isPresent());
     }
 }
