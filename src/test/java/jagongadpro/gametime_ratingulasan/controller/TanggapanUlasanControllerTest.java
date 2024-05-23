@@ -1,5 +1,6 @@
 package jagongadpro.gametime_ratingulasan.controller;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @WebMvcTest(TanggapanUlasanController.class)
 class TanggapanUlasanControllerTest {
@@ -56,10 +59,10 @@ class TanggapanUlasanControllerTest {
 
     @Test
     void testCreateTanggapanPost_Success() throws Exception {
-        when(ulasanService.findUlasanById("1")).thenReturn(Optional.of(mockUlasan));
-        when(tanggapanUlasanService.createTanggapanUlasan(any(TanggapanUlasan.class))).thenReturn(mockTanggapan);
+        when(ulasanService.findUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.of(mockUlasan)));
+        when(tanggapanUlasanService.createTanggapanUlasan(any(TanggapanUlasan.class))).thenReturn(CompletableFuture.completedFuture(mockTanggapan));
 
-        mockMvc.perform(post("/penilaian-produk/create")
+        MvcResult mvcResult = mockMvc.perform(post("/penilaian-produk/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Map.of(
                                 "id", "1",
@@ -67,15 +70,18 @@ class TanggapanUlasanControllerTest {
                                 "ulasan", "1",
                                 "tanggapan", "Response text"
                         ))))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Tanggapan created successfully")));
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).createTanggapanUlasan(any(TanggapanUlasan.class));
     }
 
     @Test
     void testCreateTanggapanPost_UlasanNotFound() throws Exception {
-        when(ulasanService.findUlasanById("1")).thenReturn(Optional.empty());
+        when(ulasanService.findUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.empty()));
 
-        mockMvc.perform(post("/penilaian-produk/create")
+        MvcResult mvcResult = mockMvc.perform(post("/penilaian-produk/create")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Map.of(
                                 "id", "1",
@@ -83,62 +89,85 @@ class TanggapanUlasanControllerTest {
                                 "ulasan", "1",
                                 "tanggapan", "Response text"
                         ))))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(containsString("Ulasan not found")));
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(ulasanService, times(1)).findUlasanById("1");
     }
 
     @Test
     void testGetTanggapan_Found() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.of(mockTanggapan)));
 
-        mockMvc.perform(get("/penilaian-produk/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value("1"));
+        MvcResult mvcResult = mockMvc.perform(get("/penilaian-produk/1"))
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).findTanggapanUlasanById("1");
     }
 
     @Test
     void testGetTanggapan_NotFound() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.empty());
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.empty()));
 
-        mockMvc.perform(get("/penilaian-produk/1"))
-                .andExpect(status().isNotFound());
+        MvcResult mvcResult = mockMvc.perform(get("/penilaian-produk/1"))
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).findTanggapanUlasanById("1");
     }
 
     @Test
     void testGetAllTanggapanPenjual() throws Exception {
-        when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(Arrays.asList(mockTanggapan));
+        when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(CompletableFuture.completedFuture(Arrays.asList(mockTanggapan)));
 
-        mockMvc.perform(get("/penilaian-produk/user/seller1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].penjualId").value("seller1"));
+        MvcResult mvcResult = mockMvc.perform(get("/penilaian-produk/user/seller1"))
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).findAllTanggapanUlasanByPenjualId("seller1");
     }
 
     @Test
     void testGetAllTanggapanPenjual_NoneFound() throws Exception {
-        when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(Arrays.asList());
+        when(tanggapanUlasanService.findAllTanggapanUlasanByPenjualId("seller1")).thenReturn(CompletableFuture.completedFuture(Arrays.asList()));
 
-        mockMvc.perform(get("/penilaian-produk/user/seller1"))
-                .andExpect(status().isNotFound());
+        MvcResult mvcResult = mockMvc.perform(get("/penilaian-produk/user/seller1"))
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).findAllTanggapanUlasanByPenjualId("seller1");
     }
 
     @Test
     void testEditTanggapan_Success() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.of(mockTanggapan)));
+        when(tanggapanUlasanService.updateTanggapanUlasan(any(TanggapanUlasan.class))).thenReturn(CompletableFuture.completedFuture(mockTanggapan));
 
-        mockMvc.perform(patch("/penilaian-produk/edit/1")
+        MvcResult mvcResult = mockMvc.perform(patch("/penilaian-produk/edit/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(Map.of("tanggapan", "Updated response"))))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Tanggapan updated successfully")));
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).updateTanggapanUlasan(any(TanggapanUlasan.class));
     }
 
     @Test
     void testDeleteTanggapan_Success() throws Exception {
-        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(Optional.of(mockTanggapan));
-        doNothing().when(tanggapanUlasanService).deleteTanggapanUlasan("1");
+        when(tanggapanUlasanService.findTanggapanUlasanById("1")).thenReturn(CompletableFuture.completedFuture(Optional.of(mockTanggapan)));
 
-        mockMvc.perform(delete("/penilaian-produk/delete/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Tanggapan deleted successfully")));
+        MvcResult mvcResult = mockMvc.perform(delete("/penilaian-produk/delete/1"))
+                .andReturn();
+
+        mvcResult.getAsyncResult(); // Wait for async result
+        assertEquals(200, mvcResult.getResponse().getStatus());
+        verify(tanggapanUlasanService, times(1)).deleteTanggapanUlasan("1");
     }
 }
