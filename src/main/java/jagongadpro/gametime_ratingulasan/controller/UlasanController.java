@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -24,12 +25,12 @@ public class UlasanController {
     @PostMapping("/create")
     public CompletableFuture<ResponseEntity<Ulasan>> createUlasanPost(@RequestBody Map<String, Object> data) {
         Ulasan ulasan = new Ulasan.Builder()
-                .id(data.get("id").toString())
+                .id(UUID.randomUUID().toString())
                 .idUser(data.get("idUser").toString())
                 .game(data.get("game").toString())
                 .rating(Integer.parseInt(data.get("rating").toString()))
                 .deskripsi(data.get("deskripsi").toString())
-                .date(LocalDate.parse(data.get("date").toString()))
+                .date(LocalDate.now())
                 .build();
         return service.createUlasan(ulasan).thenApply(ResponseEntity::ok);
     }
