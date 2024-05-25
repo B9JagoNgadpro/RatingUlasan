@@ -29,6 +29,9 @@ public class Ulasan {
     @Column(nullable = false)
     private LocalDate date;
 
+    @OneToOne(mappedBy = "ulasan", cascade = CascadeType.REMOVE)
+    private TanggapanUlasan tanggapanUlasan;
+
     private Ulasan(Builder builder) {
         this.id = builder.id;
         this.idUser = builder.idUser;
