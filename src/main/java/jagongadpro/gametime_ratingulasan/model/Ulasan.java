@@ -1,5 +1,6 @@
 package jagongadpro.gametime_ratingulasan.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public class Ulasan {
     private LocalDate date;
 
     @OneToOne(mappedBy = "ulasan", cascade = CascadeType.REMOVE)
+    @JsonBackReference
     private TanggapanUlasan tanggapanUlasan;
 
     private Ulasan(Builder builder) {
@@ -42,7 +44,6 @@ public class Ulasan {
     }
 
     public Ulasan() {
-
     }
 
     public static class Builder {
