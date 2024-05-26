@@ -11,6 +11,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/bought-games")
+@CrossOrigin(origins = {"http://localhost:3000", "https://gametime-frontend.vercel.app/"})
 public class BoughtGameController {
 
     private final BoughtGameService service;
