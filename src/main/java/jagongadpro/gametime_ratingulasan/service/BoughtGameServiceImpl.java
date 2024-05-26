@@ -26,6 +26,12 @@ public class BoughtGameServiceImpl implements BoughtGameService{
     public BoughtGame boughtGameReviewed(String idGame, String idUser){
         BoughtGame findBoughtGame = boughtGameRepository.findByIdGameAndIdUser(idGame, idUser);
         findBoughtGame.setReviewed(true);
-        return findBoughtGame;
+        return boughtGameRepository.save(findBoughtGame);
+    }
+
+    public BoughtGame boughtGameUnReviewed(String idGame, String idUser){
+        BoughtGame findBoughtGame = boughtGameRepository.findByIdGameAndIdUser(idGame, idUser);
+        findBoughtGame.setReviewed(false);
+        return boughtGameRepository.save(findBoughtGame);
     }
 }

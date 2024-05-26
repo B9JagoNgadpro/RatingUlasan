@@ -8,4 +8,5 @@ public interface BoughtGameService {
     public BoughtGame inputBoughtGame(BoughtGame boughtGame);
     public List<BoughtGame> getBoughtGamesByUserId(String idUser);
     public BoughtGame boughtGameReviewed(String idGame, String idUser);
+    public BoughtGame boughtGameUnReviewed(String idGame, String idUser);
 }
