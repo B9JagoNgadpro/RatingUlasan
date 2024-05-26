@@ -70,7 +70,7 @@ public class BoughtGameControllerTest {
         boughtGame.setReviewed(true);
         when(boughtGameService.boughtGameReviewed(anyString(), anyString())).thenReturn(boughtGame);
 
-        BoughtGame result = boughtGameController.BoughtGameReviewed("user1", data);
+        BoughtGame result = boughtGameController.boughtGameReviewed("user1", data);
 
         assertTrue(result.isReviewed());
         verify(boughtGameService, times(1)).boughtGameReviewed("game1", "user1");
