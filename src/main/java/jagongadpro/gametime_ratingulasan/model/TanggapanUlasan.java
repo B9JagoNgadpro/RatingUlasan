@@ -1,5 +1,6 @@
 package jagongadpro.gametime_ratingulasan.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class TanggapanUlasan {
 
     @OneToOne
     @JoinColumn(name = "ulasan_id", nullable = false)
+    @JsonManagedReference
     private Ulasan ulasan;
 
     @Column(nullable = false)
