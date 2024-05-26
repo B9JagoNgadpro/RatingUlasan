@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class BoughtGameServiceImplTest {
@@ -37,7 +38,6 @@ public class BoughtGameServiceImplTest {
 
         assertEquals("game1", result.getIdGame());
         assertEquals("user1", result.getIdUser());
-        assertFalse(result.isReviewed());
         verify(boughtGameRepository, times(1)).save(boughtGame);
     }
 
@@ -47,7 +47,7 @@ public class BoughtGameServiceImplTest {
                 new BoughtGame("game1", "user1"),
                 new BoughtGame("game2", "user1")
         );
-        when(boughtGameRepository.findAllByIdUser("user1")).thenReturn(boughtGames);
+        when(boughtGameRepository.findAllByIdUser(anyString())).thenReturn(boughtGames);
 
         List<BoughtGame> result = boughtGameService.getBoughtGamesByUserId("user1");
 
@@ -60,11 +60,27 @@ public class BoughtGameServiceImplTest {
     @Test
     public void testBoughtGameReviewed() {
         BoughtGame boughtGame = new BoughtGame("game1", "user1");
-        when(boughtGameRepository.findByIdGameAndIdUser("game1", "user1")).thenReturn(boughtGame);
+        when(boughtGameRepository.findByIdGameAndIdUser(anyString(), anyString())).thenReturn(boughtGame);
+        when(boughtGameRepository.save(any(BoughtGame.class))).thenReturn(boughtGame);
 
         BoughtGame result = boughtGameService.boughtGameReviewed("game1", "user1");
 
         assertTrue(result.isReviewed());
         verify(boughtGameRepository, times(1)).findByIdGameAndIdUser("game1", "user1");
+        verify(boughtGameRepository, times(1)).save(boughtGame);
+    }
+
+    @Test
+    public void testBoughtGameUnReviewed() {
+        BoughtGame boughtGame = new BoughtGame("game1", "user1");
+        boughtGame.setReviewed(true);
+        when(boughtGameRepository.findByIdGameAndIdUser(anyString(), anyString())).thenReturn(boughtGame);
+        when(boughtGameRepository.save(any(BoughtGame.class))).thenReturn(boughtGame);
+
+        BoughtGame result = boughtGameService.boughtGameUnReviewed("game1", "user1");
+
+        assertFalse(result.isReviewed());
+        verify(boughtGameRepository, times(1)).findByIdGameAndIdUser("game1", "user1");
+        verify(boughtGameRepository, times(1)).save(boughtGame);
     }
 }
