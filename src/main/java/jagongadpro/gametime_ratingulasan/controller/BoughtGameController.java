@@ -34,8 +34,14 @@ public class BoughtGameController {
     }
 
     @PatchMapping("/isReviewed/user/{idUser}")
-    public BoughtGame BoughtGameReviewed(@PathVariable String idUser, @RequestBody Map<String, Object> data) {
+    public BoughtGame boughtGameReviewed(@PathVariable String idUser, @RequestBody Map<String, Object> data) {
         BoughtGame boughtGameReviewed = service.boughtGameReviewed(data.get("idGame").toString(), idUser);
+        return boughtGameReviewed;
+    }
+
+    @PatchMapping("/unReviewed/user/{idUser}")
+    public BoughtGame boughtGameUnReviewed(@PathVariable String idUser, @RequestBody Map<String, Object> data) {
+        BoughtGame boughtGameReviewed = service.boughtGameUnReviewed(data.get("idGame").toString(), idUser);
         return boughtGameReviewed;
     }
 
