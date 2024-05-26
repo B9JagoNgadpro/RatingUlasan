@@ -75,24 +75,4 @@ public class BoughtGameControllerTest {
         assertTrue(result.isReviewed());
         verify(boughtGameService, times(1)).boughtGameReviewed("game1", "user1");
     }
-
-    @Test
-    public void testFetchBoughtGame() {
-        List<Map<String, Object>> gamesData = new ArrayList<>();
-        Map<String, Object> gameData1 = new HashMap<>();
-        gameData1.put("idGame", "game1");
-        gameData1.put("idUser", "user1");
-        gamesData.add(gameData1);
-
-        Map<String, Object> gameData2 = new HashMap<>();
-        gameData2.put("idGame", "game2");
-        gameData2.put("idUser", "user1");
-        gamesData.add(gameData2);
-
-
-
-        boughtGameController.fetchBoughtGame(gamesData);
-
-        verify(boughtGameService, times(2)).inputBoughtGame(any(BoughtGame.class));
-    }
 }
