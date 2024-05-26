@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -28,7 +29,7 @@ public class TanggapanUlasanController {
     public CompletableFuture<ResponseEntity<String>> createTanggapanPost(@RequestBody Map<String, Object> data) {
         return ulasanService.findUlasanById(data.get("ulasan").toString()).thenApply(ulasanOptional -> ulasanOptional.map(ulasan -> {
             TanggapanUlasan tanggapanUlasan = new TanggapanUlasan.Builder()
-                    .id(data.get("id").toString())
+                    .id(UUID.randomUUID().toString())
                     .penjualId(data.get("penjualId").toString())
                     .ulasan(ulasan)
                     .tanggapan(data.get("tanggapan").toString())
